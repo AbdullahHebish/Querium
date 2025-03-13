@@ -1,0 +1,219 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Abdullah\\source\\repos\\Querim\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\dtos\\studentregisterdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\dtos\\studentregisterdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\dtos\\adminlogindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\dtos\\adminlogindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\dtos\\studentlogindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\dtos\\studentlogindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\models\\student.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\models\\student.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\models\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\models\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|c:\\users\\abdullah\\source\\repos\\querim\\querim\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{047F6A10-1405-48B5-8CA3-ED08299A245D}|Querim\\Querim.csproj|solutionrelative:querim\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\appsettings.json",
+              "RelativeDocumentMoniker": "Querim\\appsettings.json",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\appsettings.json",
+              "RelativeToolTip": "Querim\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAwwAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-03-13T01:33:13.829Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d84ee353-0bef-5a41-a649-8f89aca5d84d}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Program.cs",
+              "RelativeDocumentMoniker": "Querim\\Program.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Program.cs",
+              "RelativeToolTip": "Querim\\Program.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:32:02.592Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "StudentController.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Controllers\\StudentController.cs",
+              "RelativeDocumentMoniker": "Querim\\Controllers\\StudentController.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Controllers\\StudentController.cs",
+              "RelativeToolTip": "Querim\\Controllers\\StudentController.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAcwFYAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:30:47.337Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Querim\\Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Controllers\\AdminController.cs*",
+              "RelativeToolTip": "Querim\\Controllers\\AdminController.cs*",
+              "ViewState": "AgIAABUAAAAAAAAAAAAIwCQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:26:21.453Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Querim\\Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Services\\AuthService.cs",
+              "RelativeToolTip": "Querim\\Services\\AuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:25:37.124Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "Querim\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "Querim\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:24:48.805Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "StudentLoginDto.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Dtos\\StudentLoginDto.cs",
+              "RelativeDocumentMoniker": "Querim\\Dtos\\StudentLoginDto.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Dtos\\StudentLoginDto.cs",
+              "RelativeToolTip": "Querim\\Dtos\\StudentLoginDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:22:59.511Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StudentRegisterDto.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Dtos\\StudentRegisterDto.cs",
+              "RelativeDocumentMoniker": "Querim\\Dtos\\StudentRegisterDto.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Dtos\\StudentRegisterDto.cs",
+              "RelativeToolTip": "Querim\\Dtos\\StudentRegisterDto.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAUwBoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:22:28.047Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AdminLoginDto.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Dtos\\AdminLoginDto.cs",
+              "RelativeDocumentMoniker": "Querim\\Dtos\\AdminLoginDto.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Dtos\\AdminLoginDto.cs",
+              "RelativeToolTip": "Querim\\Dtos\\AdminLoginDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:22:06.889Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Student.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Models\\Student.cs",
+              "RelativeDocumentMoniker": "Querim\\Models\\Student.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Models\\Student.cs",
+              "RelativeToolTip": "Querim\\Models\\Student.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAgwCEAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:20:49.154Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Admin.cs",
+              "DocumentMoniker": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Models\\Admin.cs",
+              "RelativeDocumentMoniker": "Querim\\Models\\Admin.cs",
+              "ToolTip": "C:\\Users\\Abdullah\\source\\repos\\Querim\\Querim\\Models\\Admin.cs",
+              "RelativeToolTip": "Querim\\Models\\Admin.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABQAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T01:19:57.439Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
