@@ -3,6 +3,7 @@ using Querim.Data;
 using Querim.Services;
 using Querim.Data;
 using Querim.Services;
+using Querim.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,13 @@ builder.Services.AddSwaggerGen();
 // Add database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader());
+});
 
 // Add services
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -27,10 +35,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseRequestLogging();
 app.UseAuthorization();
 
 app.MapControllers();

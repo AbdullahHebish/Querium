@@ -50,6 +50,7 @@ namespace Querim.Controllers
                     student.UniversityIDCard,
                     student.NationalIDCard,
                     student.IsApproved,
+                    student.IsDeleted,
                     student.CreatedAt
                 }
             });
@@ -82,6 +83,7 @@ namespace Querim.Controllers
                     student.UniversityIDCard,
                     student.NationalIDCard,
                     student.IsApproved,
+                    student.IsDeleted,
                     student.CreatedAt
                 }
             });

@@ -170,3 +170,4 @@ C:\Users\Abdullah\source\repos\Querim\Querim\obj\Release\net8.0\refint\Querim.dl
 C:\Users\Abdullah\source\repos\Querim\Querim\obj\Release\net8.0\Querim.pdb
 C:\Users\Abdullah\source\repos\Querim\Querim\obj\Release\net8.0\Querim.genruntimeconfig.cache
 C:\Users\Abdullah\source\repos\Querim\Querim\obj\Release\net8.0\ref\Querim.dll
+C:\Users\Abdullah\source\repos\Querim\Querim\obj\Release\net8.0\Querim.sourcelink.json

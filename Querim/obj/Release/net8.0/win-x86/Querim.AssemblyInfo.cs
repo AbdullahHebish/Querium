@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Querim")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5b607f9cac3ec0fba1d94cd8f6d87277997680f2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Querim")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Querim")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

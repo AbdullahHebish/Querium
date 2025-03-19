@@ -35,6 +35,9 @@ namespace Querim.Models
 
         public bool IsApproved { get; set; } = false;
         public bool IsDeleted { get; set; } = false;
+        [Required]
+        [StringLength(10)]
+        public string Status { get; set; } = "Pending";
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

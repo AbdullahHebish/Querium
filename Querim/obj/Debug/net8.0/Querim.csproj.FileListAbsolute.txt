@@ -169,4 +169,5 @@ C:\Users\Abdullah\source\repos\Querim\Querim\obj\Debug\net8.0\staticwebassets.pa
 C:\Users\Abdullah\source\repos\Querim\Querim\obj\Debug\net8.0\Querim.csproj.Up2Date
 C:\Users\Abdullah\source\repos\Querim\Querim\obj\Debug\net8.0\Querim.genruntimeconfig.cache
 C:\Users\Abdullah\source\repos\Querim\Querim\obj\Debug\net8.0\ref\Querim.dll
+C:\Users\Abdullah\source\repos\Querim\Querim\obj\Debug\net8.0\Querim.sourcelink.json
 C:\Users\Abdullah\source\repos\Querim\Querim\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
