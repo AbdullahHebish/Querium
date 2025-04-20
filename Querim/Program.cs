@@ -4,6 +4,7 @@ using Querim.Services;
 using Querim.Data;
 using Querim.Services;
 using Querim.Middleware;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +26,14 @@ builder.Services.AddCors(options =>
 
 // Add services
 builder.Services.AddScoped<IAuthService, AuthService>();
-
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50MB for PDF files
+});
+builder.Services.AddScoped<IChapterService, ChapterService>();
 var app = builder.Build();
+var uploadsDir = Path.Combine(app.Environment.WebRootPath, "uploads", "chapters");
+Directory.CreateDirectory(uploadsDir);
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
