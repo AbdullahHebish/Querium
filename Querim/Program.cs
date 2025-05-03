@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddHttpClient<GeminiService>();
 // Add database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -26,14 +26,9 @@ builder.Services.AddCors(options =>
 
 // Add services
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.Configure<FormOptions>(options =>
-{
-    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50MB for PDF files
-});
-builder.Services.AddScoped<IChapterService, ChapterService>();
 var app = builder.Build();
-var uploadsDir = Path.Combine(app.Environment.WebRootPath, "uploads", "chapters");
-Directory.CreateDirectory(uploadsDir);
+app.UseCors("AllowAll");
+
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
@@ -42,7 +37,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseRouting();
 app.UseRequestLogging();

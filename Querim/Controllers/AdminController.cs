@@ -14,11 +14,10 @@ namespace Querim.Controllers
     public class AdminController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IChapterService _chapterService;
         private readonly ILogger<AdminController> _logger;
-        public AdminController(ApplicationDbContext context, IChapterService chapterService, ILogger<AdminController> logger)
+        public AdminController(ApplicationDbContext context, ILogger<AdminController> logger)
         {
-            _chapterService = chapterService;
+
             _context = context;
             _logger = logger;
         }
@@ -108,138 +107,140 @@ namespace Querim.Controllers
 
             return Ok(students);
         }
-        [HttpPost("upload-subject")]
-        //public async Task<IActionResult> UploadSubject([FromBody] SubjectUploadDto subjectDto)
-        //{
-        //    var subject = new Subject
-        //    {
-        //        Title = subjectDto.Title,
-        //        Description = subjectDto.Description,
-        //        AcademicYear = subjectDto.AcademicYear,
-        //        Semester = subjectDto.Semester,
-        //        Chapters = subjectDto.Chapters.Select(c => new Chapter
-        //        {
-        //            Title = c.Title,
-        //            Description = c.Description,
-        //            PdfPath = c.PdfPath
-        //        }).ToList()
-        //    };
-
-        //    _context.Subjects.Add(subject);
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok(new { message = "Subject uploaded successfully" });
-        //}
-        [HttpPost("subjects/search")]
-        public async Task<IActionResult> SearchSubjects([FromBody] SubjectRequestDto request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var subjects = await _context.Subjects
-                .Where(s => s.AcademicYear == request.AcademicYear && s.Semester == request.Semester)
-                .ToListAsync();
-
-            if (subjects == null || !subjects.Any())
-            {
-                return NotFound("No subjects found for the specified academic year and semester.");
-            }
-
-            return Ok(subjects);
-        }
-
-        [HttpPost("subjects/{subjectId}/upload-chapter")]
-        public async Task<ActionResult<Chapter>> UploadChapter(
-        int subjectId,
-        [FromForm] ChapterUploadDto chapterDto)
-        {
-            try
-            {
-                if (chapterDto.PdfFile == null || chapterDto.PdfFile.Length == 0)
-                    return BadRequest("No file was uploaded");
-
-                var chapter = await _chapterService.UploadChapterAsync(subjectId, chapterDto);
-                return Ok(chapter);
-            }
-            catch (ArgumentException ex)
-            {
-                _logger.LogWarning(ex, "Invalid input while uploading chapter");
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error uploading chapter");
-                return StatusCode(500, "An error occurred while uploading the chapter");
-            }
-        }
+[HttpPost("subjects/search")]
+public async Task<IActionResult> SearchSubjects([FromBody] SubjectRequestDto request)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
     }
 
+    var subjects = await _context.Subjects
+        .Where(s => s.AcademicYear == request.AcademicYear && s.Semester == request.Semester)
+        .ToListAsync();
 
+    if (subjects == null || !subjects.Any())
+    {
+        return NotFound("No subjects found for the specified academic year and semester.");
+    }
 
+    return Ok(subjects);
 }
+    }
+}
+//    [HttpPost("upload-subject")]
+//    //public async Task<IActionResult> UploadSubject([FromBody] SubjectUploadDto subjectDto)
+//    //{
+//    //    var subject = new Subject
+//    //    {
+//    //        Title = subjectDto.Title,
+//    //        Description = subjectDto.Description,
+//    //        AcademicYear = subjectDto.AcademicYear,
+//    //        Semester = subjectDto.Semester,
+//    //        Chapters = subjectDto.Chapters.Select(c => new Chapter
+//    //        {
+//    //            Title = c.Title,
+//    //            Description = c.Description,
+//    //            PdfPath = c.PdfPath
+//    //        }).ToList()
+//    //    };
+
+//    //    _context.Subjects.Add(subject);
+//    //    await _context.SaveChangesAsync();
+
+//    //    return Ok(new { message = "Subject uploaded successfully" });
+//    //}
+
+//    [HttpPost("subjects/{subjectId}/upload-chapter")]
+//    public async Task<ActionResult<Chapter>> UploadChapter(
+//    int subjectId,
+//    [FromForm] ChapterUploadDto chapterDto)
+//    {
+//        try
+//        {
+//            if (chapterDto.PdfFile == null || chapterDto.PdfFile.Length == 0)
+//                return BadRequest("No file was uploaded");
+
+//            var chapter = await _chapterService.UploadChapterAsync(subjectId, chapterDto);
+//            return Ok(chapter);
+//        }
+//        catch (ArgumentException ex)
+//        {
+//            _logger.LogWarning(ex, "Invalid input while uploading chapter");
+//            return BadRequest(ex.Message);
+//        }
+//        catch (Exception ex)
+//        {
+//            _logger.LogError(ex, "Error uploading chapter");
+//            return StatusCode(500, "An error occurred while uploading the chapter");
+//        }
+//    }
+//}
 
 
-        //[HttpGet("subjects")]
-        //public async Task<IActionResult> GetSubjects()
-        //{
-        //    var subjects = await _context.Subjects
-        //        .Include(s => s.Chapters)
-        //        .ThenInclude(c => c.Questions)
-        //        .Select(s => new
-        //        {
-        //            s.Id,
-        //            s.Title,
-        //            s.Description,
-        //            s.AcademicYear,
-        //            s.Semester,
-        //            Chapters = s.Chapters.Select(c => new
-        //            {
-        //                c.Id,
-        //                c.Title,
-        //                c.Description,
-        //                c.PdfPath,
-        //                Questions = c.Questions.Select(q => new
-        //                {
-        //                    q.Id,
-        //                    q.Text,
-        //                    q.Answer
-        //                })
-        //            })
-        //        })
-        //        .ToListAsync();
 
-        //    return Ok(subjects);
-        //}
-        //[HttpPost("approve-student/{id}")]
-        //public async Task<IActionResult> ApproveStudent(int id)
-        //{
-        //    var student = await _context.Students.FindAsync(id);
-        //    if (student == null)
-        //    {
-        //        return NotFound(new { message = "Student not found" });
-        //    }
 
-        //    student.IsApproved = true;
-        //    await _context.SaveChangesAsync();
 
-        //    return Ok(new { message = "Student approved" });
-        //}
-        //[HttpPost("approve-student/{universityIDCard}")]
-        //public async Task<IActionResult> ApproveStudent(string universityIDCard)
-        //{
-        //    var student = await _context.Students
-        //        .FirstOrDefaultAsync(s => s.UniversityIDCard == universityIDCard);
 
-        //    if (student == null)
-        //    {
-        //        return NotFound(new { message = "Student not found" });
-        //    }
+//[HttpGet("subjects")]
+//public async Task<IActionResult> GetSubjects()
+//{
+//    var subjects = await _context.Subjects
+//        .Include(s => s.Chapters)
+//        .ThenInclude(c => c.Questions)
+//        .Select(s => new
+//        {
+//            s.Id,
+//            s.Title,
+//            s.Description,
+//            s.AcademicYear,
+//            s.Semester,
+//            Chapters = s.Chapters.Select(c => new
+//            {
+//                c.Id,
+//                c.Title,
+//                c.Description,
+//                c.PdfPath,
+//                Questions = c.Questions.Select(q => new
+//                {
+//                    q.Id,
+//                    q.Text,
+//                    q.Answer
+//                })
+//            })
+//        })
+//        .ToListAsync();
 
-        //    student.IsApproved = true;
-        //    await _context.SaveChangesAsync();
+//    return Ok(subjects);
+//}
+//[HttpPost("approve-student/{id}")]
+//public async Task<IActionResult> ApproveStudent(int id)
+//{
+//    var student = await _context.Students.FindAsync(id);
+//    if (student == null)
+//    {
+//        return NotFound(new { message = "Student not found" });
+//    }
 
-        //    return Ok(new { message = "Student approved" });
-        //}
-  
+//    student.IsApproved = true;
+//    await _context.SaveChangesAsync();
+
+//    return Ok(new { message = "Student approved" });
+//}
+//[HttpPost("approve-student/{universityIDCard}")]
+//public async Task<IActionResult> ApproveStudent(string universityIDCard)
+//{
+//    var student = await _context.Students
+//        .FirstOrDefaultAsync(s => s.UniversityIDCard == universityIDCard);
+
+//    if (student == null)
+//    {
+//        return NotFound(new { message = "Student not found" });
+//    }
+
+//    student.IsApproved = true;
+//    await _context.SaveChangesAsync();
+
+//    return Ok(new { message = "Student approved" });
+//}
+

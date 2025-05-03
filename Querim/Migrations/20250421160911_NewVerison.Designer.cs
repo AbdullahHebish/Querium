@@ -12,8 +12,8 @@ using Querim.Data;
 namespace Querim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250325192952_Unique-columns")]
-    partial class Uniquecolumns
+    [Migration("20250421160911_NewVerison")]
+    partial class NewVerison
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
