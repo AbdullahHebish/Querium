@@ -13,47 +13,48 @@ namespace Querim.Services
         {
             _httpClient = httpClient;
             _configuration = configuration;
-            _apiKey = _configuration["GeminiApiKey"] ?? "YOUR-API-KEY"; 
+            _apiKey = _configuration["GeminiApiKey"] ?? throw new ArgumentNullException("GeminiApiKey is not configured");
         }
-        public async Task<List<string>> GenerateQuestionsAsync(string text)
+
+        public async Task<List<QuizQuestion>> GenerateQuestionsAsync(string text)
         {
             try
             {
-
                 var endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+                var prompt = $@"Generate exactly 20 high-quality multiple choice questions as JSON structure based on the following text:
+                Format should be:
+                {{
+                    ""questions"": [
+                        {{
+                            ""id"": 1,
+                            ""question"": ""Your question here"",
+                            ""answers"": [""Option 1"", ""Option 2"", ""Option 3"", ""Option 4""],
+                            ""correct_answer"": ""Correct Option""
+                        }}
+                        // More questions...
+                    ]
+                }}
+                Text content: {text}";
+
                 var requestBody = new
                 {
                     contents = new[]
                     {
-                    new
-                    {
-                        parts = new[]
+                        new
                         {
-                            new { text = $@" generate multiple-choice questions based on the {text}  
-
-Format your response as a JSON array of objects where each object represents one question with the following structure:
-[
-    {{
-        ""id"": [unique_number],
-        ""question"": ""[the generated question]"",
-        ""answers"": [""option1"", ""option2"", ""option3"", ""option4""],
-        ""correct_answer"": ""[the correct option]""
-    }},
-    // more questions...
-]
-
-Requirements:
-1. Create at least 10 questions covering different aspects of the document
-2. Questions should test comprehension of important concepts
-3. Make answers plausible but with one clearly correct option
-4. Number the questions sequentially starting from 1
-5. Only respond with the JSON array, no additional text or explanations
-6. Ensure the JSON is valid and properly formatted
-
-Please process the PDF I upload and respond with the questions in exactly this format. "}
+                            parts = new[]
+                            {
+                                new { text = prompt }
+                            }
                         }
+                    },
+                    generationConfig = new
+                    {
+                        temperature = 0.7,
+                        topP = 1,
+                        topK = 40,
+                        maxOutputTokens = 2048
                     }
-                }
                 };
 
                 var content = new StringContent(
@@ -63,51 +64,130 @@ Please process the PDF I upload and respond with the questions in exactly this f
                 );
 
                 var response = await _httpClient.PostAsync($"{endpoint}?key={_apiKey}", content);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Gemini API error: {response.StatusCode} - {errorContent}");
-                }
+                response.EnsureSuccessStatusCode();
 
                 var responseString = await response.Content.ReadAsStringAsync();
                 return ParseGeminiResponse(responseString);
             }
             catch (Exception ex)
             {
-                // Log the error (in production, use proper logging)
                 Console.WriteLine($"Error calling Gemini API: {ex.Message}");
-                throw; // Re-throw the exception to handle it in the controller
+                throw;
             }
         }
 
-        private List<string> ParseGeminiResponse(string responseJson)
+        public List<QuizQuestion> ParseGeminiResponse(string responseJson)
         {
-            using var doc = JsonDocument.Parse(responseJson);
-            var questions = new List<string>();
-
-            var candidates = doc.RootElement.GetProperty("candidates");
-            foreach (var candidate in candidates.EnumerateArray())
+            try
             {
-                var content = candidate.GetProperty("content");
-                var parts = content.GetProperty("parts");
-                foreach (var part in parts.EnumerateArray())
+                using var doc = JsonDocument.Parse(responseJson);
+                var root = doc.RootElement;
+
+                // Handle different response formats
+                if (root.TryGetProperty("candidates", out var candidates) &&
+                    candidates.ValueKind == JsonValueKind.Array)
                 {
-                    var text = part.GetProperty("text").GetString();
-                    if (!string.IsNullOrEmpty(text))
+                    foreach (var candidate in candidates.EnumerateArray())
                     {
-                        // Split response into individual questions
-                        var lines = text.Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                            .Select(q => q.Trim())
-                            .Where(q => !string.IsNullOrEmpty(q))
-                            .ToList();
-                        questions.AddRange(lines);
+                        if (candidate.TryGetProperty("content", out var content) &&
+                            content.TryGetProperty("parts", out var parts))
+                        {
+                            foreach (var part in parts.EnumerateArray())
+                            {
+                                if (part.TryGetProperty("text", out var textElement))
+                                {
+                                    var text = textElement.GetString();
+                                    if (!string.IsNullOrEmpty(text))
+                                    {
+                                        return ExtractQuestionsFromText(text);
+                                    }
+                                }
+                            }
+                        }
                     }
+                }
+                else if (root.TryGetProperty("questions", out var questions))
+                {
+                    // Direct questions array case
+                    return ParseQuestionsArray(questions);
+                }
+
+                throw new JsonException("Unable to find questions in the response");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error parsing Gemini response: {ex.Message}");
+                throw;
+            }
+        }
+
+        private List<QuizQuestion> ExtractQuestionsFromText(string text)
+        {
+            try
+            {
+                var jsonStart = text.IndexOf('{');
+                var jsonEnd = text.LastIndexOf('}') + 1;
+                if (jsonStart < 0 || jsonEnd <= jsonStart)
+                {
+                    throw new JsonException("Invalid JSON format in response text");
+                }
+
+                var jsonContent = text.Substring(jsonStart, jsonEnd - jsonStart);
+                using var doc = JsonDocument.Parse(jsonContent);
+
+                if (doc.RootElement.TryGetProperty("questions", out var questions))
+                {
+                    return ParseQuestionsArray(questions);
+                }
+
+                throw new JsonException("Questions array not found in JSON");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error extracting questions from text: {ex.Message}");
+                throw;
+            }
+        }
+
+        private List<QuizQuestion> ParseQuestionsArray(JsonElement questionsArray)
+        {
+            var questions = new List<QuizQuestion>();
+
+            foreach (var questionElement in questionsArray.EnumerateArray())
+            {
+                try
+                {
+                    var question = new QuizQuestion
+                    {
+                        Id = questionElement.GetProperty("id").GetInt32(),
+                        QuestionText = questionElement.GetProperty("question").GetString() ?? string.Empty,
+                        CorrectAnswer = questionElement.GetProperty("correct_answer").GetString() ?? string.Empty,
+                        Answers = new List<string>()
+                    };
+
+                    foreach (var answer in questionElement.GetProperty("answers").EnumerateArray())
+                    {
+                        question.Answers.Add(answer.GetString() ?? string.Empty);
+                    }
+
+                    questions.Add(question);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error parsing question: {ex.Message}");
+                    // Continue with next question if one fails
                 }
             }
 
             return questions;
         }
-    }
 
+        public class QuizQuestion
+        {
+            public int Id { get; set; }
+            public string QuestionText { get; set; } = string.Empty;
+            public List<string> Answers { get; set; } = new List<string>();
+            public string CorrectAnswer { get; set; } = string.Empty;
+        }
+    }
 }
