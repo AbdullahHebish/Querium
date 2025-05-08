@@ -15,6 +15,7 @@ namespace Querim.Data
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<QuizQuestionEntity> QuizQuestions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
