@@ -13,7 +13,7 @@ namespace Querim.Services
         {
             _httpClient = httpClient;
             _configuration = configuration;
-            _apiKey = _configuration["GeminiApiKey"] ?? "YOUR-API-KEY"; // Get from appsettings.json
+            _apiKey = _configuration["GeminiApiKey"] ?? "YOUR-API-KEY"; 
         }
         public async Task<List<string>> GenerateQuestionsAsync(string text)
         {
@@ -29,7 +29,28 @@ namespace Querim.Services
                     {
                         parts = new[]
                         {
-                            new { text = $@" return true or false questions {text}"}//Generate exactly 5 high-quality multiple choice questions as json structure based on the following text:Text content:
+                            new { text = $@" generate multiple-choice questions based on the {text}  
+
+Format your response as a JSON array of objects where each object represents one question with the following structure:
+[
+    {{
+        ""id"": [unique_number],
+        ""question"": ""[the generated question]"",
+        ""answers"": [""option1"", ""option2"", ""option3"", ""option4""],
+        ""correct_answer"": ""[the correct option]""
+    }},
+    // more questions...
+]
+
+Requirements:
+1. Create at least 10 questions covering different aspects of the document
+2. Questions should test comprehension of important concepts
+3. Make answers plausible but with one clearly correct option
+4. Number the questions sequentially starting from 1
+5. Only respond with the JSON array, no additional text or explanations
+6. Ensure the JSON is valid and properly formatted
+
+Please process the PDF I upload and respond with the questions in exactly this format. "}
                         }
                     }
                 }
