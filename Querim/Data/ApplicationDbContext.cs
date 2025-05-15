@@ -37,10 +37,7 @@ namespace Querim.Data
                 .WithMany(s => s.Chapters)
                 .HasForeignKey(c => c.SubjectId);
 
-            modelBuilder.Entity<Question>()
-                .HasOne(q => q.Chapter)
-                .WithMany(c => c.Questions)
-                .HasForeignKey(q => q.ChapterId);
+         
         }
 
     }

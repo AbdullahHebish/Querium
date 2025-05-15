@@ -23,6 +23,7 @@ namespace Querim.Models
         [Required]
         public string Semester { get; set; }
 
-        public ICollection<Chapter> Chapters { get; set; }
+        public ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
+
     }
 }

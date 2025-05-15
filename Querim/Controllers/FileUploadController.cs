@@ -23,6 +23,7 @@ namespace Querim.Controllers
             _dbContext = dbContext;
 
         }
+
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
@@ -140,5 +141,6 @@ namespace Querim.Controllers
                 return StatusCode(500, new { error = "An error occurred while retrieving questions." });
             }
         }
+
     }
 }

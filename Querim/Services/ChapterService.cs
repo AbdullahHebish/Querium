@@ -63,7 +63,7 @@ namespace Querim.Services
                 {
                     Title = chapterDto.Title,
                     Description = chapterDto.Description,
-                    PdfPath = pdfFileName,
+
                     SubjectId = subjectId
                 };
 

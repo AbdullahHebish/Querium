@@ -24,6 +24,6 @@ namespace Querim.Models
         public int SubjectId { get; set; }
         public Subject Subject { get; set; }
 
-        public ICollection<Question> Questions { get; set; }
+        public ICollection<QuizQuestionEntity> QuizQuestions { get; set; }
     }
 }
