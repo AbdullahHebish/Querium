@@ -21,7 +21,7 @@ namespace Querim.Services
             try
             {
                 var endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
-                var prompt = $@"Generate exactly 20 high-quality multiple choice questions as JSON structure based on the following text:
+                var prompt = $@"Generate exactly high-quality multiple choice questions on every part on {text} as JSON structure based on the following text:
                 Format should be:
                 {{
                     ""questions"": [
