@@ -12,8 +12,8 @@ using Querim.Data;
 namespace Querim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250508010232_add-QuizQuestion")]
-    partial class addQuizQuestion
+    [Migration("20250602144731_new-db")]
+    partial class newdb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,7 +106,7 @@ namespace Querim.Migrations
                     b.ToTable("Questions");
                 });
 
-            modelBuilder.Entity("Querim.Models.QuizQuestion", b =>
+            modelBuilder.Entity("Querim.Models.QuizQuestionEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -118,23 +118,20 @@ namespace Querim.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ChapterId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CorrectAnswer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("QuestionText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ChapterId");
 
                     b.ToTable("QuizQuestions");
                 });
@@ -244,7 +241,18 @@ namespace Querim.Migrations
             modelBuilder.Entity("Querim.Models.Question", b =>
                 {
                     b.HasOne("Querim.Models.Chapter", "Chapter")
-                        .WithMany("Questions")
+                        .WithMany()
+                        .HasForeignKey("ChapterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chapter");
+                });
+
+            modelBuilder.Entity("Querim.Models.QuizQuestionEntity", b =>
+                {
+                    b.HasOne("Querim.Models.Chapter", "Chapter")
+                        .WithMany("QuizQuestions")
                         .HasForeignKey("ChapterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -254,7 +262,7 @@ namespace Querim.Migrations
 
             modelBuilder.Entity("Querim.Models.Chapter", b =>
                 {
-                    b.Navigation("Questions");
+                    b.Navigation("QuizQuestions");
                 });
 
             modelBuilder.Entity("Querim.Models.Subject", b =>

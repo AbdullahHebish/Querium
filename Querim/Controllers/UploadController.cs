@@ -132,7 +132,9 @@ namespace Querim.Controllers
             {
                 c.Id,
                 c.Title,
-                c.Description
+                c.Description,
+                //c.SubjectId,
+                SubjectName = subject.Title
                 // Add other properties as needed
             }).ToList();
 

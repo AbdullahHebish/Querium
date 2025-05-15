@@ -58,6 +58,10 @@ namespace Querim.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("PdfPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Querim.Migrations
 {
     /// <inheritdoc />
-    public partial class NewVerison : Migration
+    public partial class newdb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -105,6 +105,28 @@ namespace Querim.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "QuizQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AnswersJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CorrectAnswer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ChapterId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_QuizQuestions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_QuizQuestions_Chapters_ChapterId",
+                        column: x => x.ChapterId,
+                        principalTable: "Chapters",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Chapters_SubjectId",
                 table: "Chapters",
@@ -113,6 +135,11 @@ namespace Querim.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_ChapterId",
                 table: "Questions",
+                column: "ChapterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuizQuestions_ChapterId",
+                table: "QuizQuestions",
                 column: "ChapterId");
 
             migrationBuilder.CreateIndex(
@@ -142,6 +169,9 @@ namespace Querim.Migrations
 
             migrationBuilder.DropTable(
                 name: "Questions");
+
+            migrationBuilder.DropTable(
+                name: "QuizQuestions");
 
             migrationBuilder.DropTable(
                 name: "Students");

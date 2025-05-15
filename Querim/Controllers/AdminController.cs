@@ -107,25 +107,54 @@ namespace Querim.Controllers
 
             return Ok(students);
         }
-[HttpPost("subjects/search")]
-public async Task<IActionResult> SearchSubjects([FromBody] SubjectRequestDto request)
-{
-    if (!ModelState.IsValid)
-    {
-        return BadRequest(ModelState);
-    }
+        [HttpPost("subjects/search")]
+        public async Task<IActionResult> SearchSubjects([FromBody] SubjectRequestDto request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    var subjects = await _context.Subjects
-        .Where(s => s.AcademicYear == request.AcademicYear && s.Semester == request.Semester)
-        .ToListAsync();
+            // Simple validation for demo
+            if (string.IsNullOrWhiteSpace(request.Semester))
+            {
+                return BadRequest("Semester cannot be empty.");
+            }
 
-    if (subjects == null || !subjects.Any())
-    {
-        return NotFound("No subjects found for the specified academic year and semester.");
-    }
+            var subjects = await _context.Subjects
+                .Where(s => s.AcademicYear == request.AcademicYear && s.Semester == request.Semester)
+                .ToListAsync();
 
-    return Ok(subjects);
-}
+            if (subjects == null || !subjects.Any())
+            {
+                return NotFound("No subjects found for the specified academic year and semester.");
+            }
+
+            return Ok(new
+            {
+                Count = subjects.Count,
+                Data = subjects
+            });
+        }
+        [HttpPost("filter")]
+        public async Task<IActionResult> FilterSubjects([FromBody] SubjectFilterDto filter)
+        {
+            if (filter == null || string.IsNullOrWhiteSpace(filter.Semester))
+            {
+                return BadRequest("Invalid filter parameters.");
+            }
+
+            var subjects = await _context.Subjects
+                .Where(s => s.AcademicYear == filter.AcademicYear && s.Semester == filter.Semester)
+                .ToListAsync();
+
+            if (!subjects.Any())
+            {
+                return NotFound("No subjects found matching the specified criteria.");
+            }
+
+            return Ok(subjects);
+        }
     }
 }
 //    [HttpPost("upload-subject")]
