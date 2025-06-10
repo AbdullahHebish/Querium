@@ -4,16 +4,28 @@ using Microsoft.EntityFrameworkCore;
 using Querim.Data;
 using Querim.Dtos;
 using Querim.Models;
+using Querim.Services;
 using System.Threading.Tasks;
-
+using BCrypt.Net;
 namespace Querim.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class StudentController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+    
 
+    public static string HashPassword(string password)
+    {
+        // The WorkFactor is 12 by default, adjusts hash complexity
+        return BCrypt.Net.BCrypt.HashPassword(password);
+    }
+        public static bool VerifyPassword(string enteredPassword, string storedHash)
+        {
+            return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
+        }
+        private readonly ApplicationDbContext _context;
+       
         public StudentController(ApplicationDbContext context)
         {
             _context = context;
@@ -31,7 +43,7 @@ namespace Querim.Controllers
             {
                 FullName = registerDto.FullName,
                 Email = registerDto.Email,
-                PasswordHash = registerDto.Password, // Use hashing in production
+                PasswordHash =HashPassword( registerDto.Password), 
                 UniversityIDCard = registerDto.UniversityIDCard,
                 NationalIDCard = registerDto.NationalIDCard
             };
@@ -61,7 +73,7 @@ namespace Querim.Controllers
             var student = await _context.Students
                 .FirstOrDefaultAsync(s => s.Email == loginDto.Email && !s.IsDeleted);
 
-            if (student == null || student.PasswordHash != loginDto.Password)
+            if (student == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, student.PasswordHash))
             {
                 return Unauthorized(new { message = "Invalid credentials" });
             }
@@ -71,7 +83,6 @@ namespace Querim.Controllers
                 return Unauthorized(new { message = "Account not approved" });
             }
 
-            // return Ok(new { message = "Login successful" });
             return Ok(new
             {
                 message = "Login successful",
@@ -88,12 +99,47 @@ namespace Querim.Controllers
                 }
             });
         }
-
         [HttpPost("logout")]
         public IActionResult Logout()
         {
             // Implement logout logic (e.g., clear session)
             return Ok(new { message = "Logout successful" });
         }
+        [HttpGet("Profile/{id}")]
+        public async Task<IActionResult> GetUserInfo(string id)
+        {
+            var student = await _context.Students
+                .FirstOrDefaultAsync(s => s.UniversityIDCard == id);
+
+            if (student == null)
+                return NotFound();
+
+            return Ok(student);
+        }
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (model.NewPassword != model.ConfirmNewPassword)
+                return BadRequest(new { message = "New passwords do not match." });
+
+            var student = await _context.Students.FirstOrDefaultAsync(s => s.UniversityIDCard == model.UniversityIDCard);
+            if (student == null)
+                return NotFound("User not found.");
+
+            // Verify current password using BCrypt
+            if (!BCrypt.Net.BCrypt.Verify(model.CurrentPassword, student.PasswordHash))
+                return BadRequest("Current password is incorrect.");
+
+            // Hash the new password and update
+            student.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Password changed successfully." });
+        }
+        //}
     }
 }
