@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Querim.Data;
 
@@ -11,9 +12,11 @@ using Querim.Data;
 namespace Querim.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250611131747_Add-student-Quiz-table")]
+    partial class AddstudentQuiztable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,9 +165,6 @@ namespace Querim.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("StudentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UploadId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Querim.Models;
+using Querim.Models.QuizStudent;
 
 namespace Querim.Data
 {
@@ -16,6 +17,8 @@ namespace Querim.Data
         public DbSet<Chapter> Chapters { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<QuizQuestionEntity> QuizQuestions { get; set; }
+        public DbSet<StudentUpload> StudentUploads { get; set; }
+        public DbSet<StudentQuiz> StudentQuizzes { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
