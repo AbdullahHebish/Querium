@@ -4,7 +4,9 @@ using Querim.Data;
 using Querim.Dtos;
 using Querim.Models;
 using Querim.Services;
+using System.Text;
 using System.Text.Json;
+using UglyToad.PdfPig;
 
 namespace Querim.Controllers
 {
@@ -40,7 +42,6 @@ namespace Querim.Controllers
 
             return Ok(chapter);
         }
-
         [HttpPost("upload/{chapterId}")]
         public async Task<IActionResult> UploadFileToChapter(int chapterId, IFormFile file)
         {
@@ -57,17 +58,36 @@ namespace Querim.Controllers
                 return BadRequest("Please upload a valid file.");
             }
 
-            // Validate file extension
-            if (!file.FileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+            // Validate file extension (allow .txt and .pdf)
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (fileExtension != ".pdf" && fileExtension != ".txt")
             {
-                return BadRequest("Only .txt files are supported.");
+                return BadRequest("Only .txt and .pdf files are supported.");
             }
 
-            string text;
+            string extractedText = "";
+
             try
             {
-                using var reader = new StreamReader(file.OpenReadStream());
-                text = await reader.ReadToEndAsync();
+                if (fileExtension == ".pdf")
+                {
+                    // Extract text from PDF using PdfPig
+                    using var pdfStream = file.OpenReadStream();
+                    using var pdfDocument = PdfDocument.Open(pdfStream);
+
+                    var stringBuilder = new StringBuilder();
+                    foreach (var page in pdfDocument.GetPages())
+                    {
+                        stringBuilder.AppendLine(page.Text);
+                    }
+                    extractedText = stringBuilder.ToString();
+                }
+                else if (fileExtension == ".txt")
+                {
+                    // Read txt file content as plain text
+                    using var reader = new StreamReader(file.OpenReadStream());
+                    extractedText = await reader.ReadToEndAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -75,15 +95,16 @@ namespace Querim.Controllers
                 return BadRequest("Error reading file content.");
             }
 
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(extractedText))
             {
-                return BadRequest("The file contains no text.");
+                return BadRequest("The file contains no readable text.");
             }
 
             List<GeminiService.QuizQuestion> questions;
+
             try
             {
-                questions = await _geminiService.GenerateQuestionsAsync(text);
+                questions = await _geminiService.GenerateQuestionsAsync(extractedText);
             }
             catch (HttpRequestException httpEx)
             {
@@ -162,3 +183,80 @@ namespace Querim.Controllers
         }
     }
 }
+        //[HttpPost("upload/{chapterId}")]
+        //public async Task<IActionResult> UploadFileToChapter(int chapterId, IFormFile file)
+        //{
+        //    // Validate chapter exists
+        //    var chapter = await _dbContext.Chapters.FindAsync(chapterId);
+        //    if (chapter == null)
+        //    {
+        //        return NotFound("Chapter not found");
+        //    }
+
+        //    // Validate file presence
+        //    if (file == null || file.Length == 0)
+        //    {
+        //        return BadRequest("Please upload a valid file.");
+        //    }
+
+        //    // Validate file extension
+        //    if (!file.FileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+        //    {
+        //        return BadRequest("Only .txt files are supported.");
+        //    }
+
+        //    string text;
+        //    try
+        //    {
+        //        using var reader = new StreamReader(file.OpenReadStream());
+        //        text = await reader.ReadToEndAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error reading file content");
+        //        return BadRequest("Error reading file content.");
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(text))
+        //    {
+        //        return BadRequest("The file contains no text.");
+        //    }
+
+        //    List<GeminiService.QuizQuestion> questions;
+        //    try
+        //    {
+        //        questions = await _geminiService.GenerateQuestionsAsync(text);
+        //    }
+        //    catch (HttpRequestException httpEx)
+        //    {
+        //        _logger.LogError(httpEx, "Gemini API request failed");
+        //        return StatusCode(502, new
+        //        {
+        //            error = "Error communicating with Gemini API",
+        //            details = httpEx.Message
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Unexpected error generating questions");
+        //        return StatusCode(500, "An error occurred while generating questions.");
+        //    }
+
+        //    var questionEntities = questions.Select(q => new QuizQuestionEntity
+        //    {
+        //        QuestionText = q.QuestionText,
+        //        CorrectAnswer = q.CorrectAnswer,
+        //        AnswersJson = JsonSerializer.Serialize(q.Answers),
+        //        ChapterId = chapterId
+        //    }).ToList();
+
+        //    _dbContext.QuizQuestions.AddRange(questionEntities);
+        //    await _dbContext.SaveChangesAsync();
+
+        //    return Ok(new
+        //    {
+        //        success = true,
+        //        count = questions.Count,
+        //        questions
+        //    });
+        //}
