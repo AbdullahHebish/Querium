@@ -119,8 +119,20 @@ public class AdminApproveController : ControllerBase
             return NotFound();
 
         upload.Status = "Rejected";
+
+        // Also update associated quizzes to "Rejected" status
+        var relatedQuizzes = await _dbContext.StudentQuizzes
+            .Where(q => q.UploadId == uploadId)
+            .ToListAsync();
+
+        foreach (var quiz in relatedQuizzes)
+        {
+            quiz.Status = "Rejected";
+        }
+
         await _dbContext.SaveChangesAsync();
 
-        return Ok(new { message = "Upload rejected." });
+        return Ok(new { message = "Upload and associated quizzes rejected." });
     }
+
 }

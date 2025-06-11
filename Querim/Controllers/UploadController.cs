@@ -43,7 +43,7 @@ namespace Querim.Controllers
             return Ok(chapter);
         }
         [HttpPost("upload/{chapterId}")]
-        public async Task<IActionResult> UploadFileToChapter(int chapterId, IFormFile file)
+        public async Task<IActionResult> UploadFileToChapter(int chapterId, [FromForm] IFormFile file)
         {
             // Validate chapter exists
             var chapter = await _dbContext.Chapters.FindAsync(chapterId);

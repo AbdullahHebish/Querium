@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Querim.Data;
+using Querim.Models.QuizStudent;
 using System.Text.Json;
 
 [ApiController]
@@ -13,56 +14,6 @@ public class StudentQuizController : ControllerBase
     {
         _dbContext = dbContext;
     }
-
-    // Get all quizzes for a student
-    [HttpGet("student/{studentId}/my-quizzes")]
-    public async Task<IActionResult> GetMyQuizzes(int studentId)
-    {
-        var quizzesData = await _dbContext.StudentQuizzes
-            .Where(q => q.StudentId == studentId)
-            .Select(q => new
-            {
-                q.Id,
-                q.UploadId,
-                q.QuestionText,
-                q.QuestionCorrectAnswer,
-                q.QuestionAnswersJson,
-                q.Status
-            })
-            .ToListAsync();
-
-        var quizzes = quizzesData.Select(q => new
-        {
-            q.Id,
-            q.UploadId,
-            q.QuestionText,
-            q.QuestionCorrectAnswer,
-            Answers = JsonSerializer.Deserialize<List<string>>(q.QuestionAnswersJson),
-            q.Status
-        }).ToList();
-
-        return Ok(quizzes);
-    }
-
-    // Get uploads for a student
-    [HttpGet("student/{studentId}/uploads")]
-    public async Task<IActionResult> GetUploadsByStudent(int studentId)
-    {
-        var uploads = await _dbContext.StudentUploads
-            .Where(u => u.StudentId == studentId && !u.IsDeleted)
-            .Select(u => new
-            {
-                u.Id,
-                u.FileName,
-                FileUrl = "/uploads/students/" + System.IO.Path.GetFileName(u.FilePath),
-                u.Status,
-                u.UploadedAt
-            })
-            .ToListAsync();
-
-        return Ok(uploads);
-    }
-
     // Get quizzes linked to a specific upload for a student
     [HttpGet("student/{studentId}/uploads/{uploadId}/quizzes")]
     public async Task<IActionResult> GetQuizzesByUpload(int studentId, int uploadId)
@@ -100,4 +51,31 @@ public class StudentQuizController : ControllerBase
 
         return Ok(quizzes);
     }
+    [HttpGet("student/{studentId}/pdfs")]
+    public async Task<IActionResult> GetUploadsByStudent(int studentId, [FromQuery] string status = null)
+    {
+        var query = _dbContext.StudentUploads
+            .Where(u => u.StudentId == studentId && !u.IsDeleted);
+
+        // Apply status filter if provided
+        if (!string.IsNullOrEmpty(status) && status.ToLower() != "all")
+        {
+            query = query.Where(u => u.Status.ToLower() == status.ToLower());
+        }
+
+        var uploads = await query
+            .Select(u => new
+            {
+                u.Id,
+                u.FileName,
+                FileUrl = "/uploads/students/" + System.IO.Path.GetFileName(u.FilePath),
+                u.Status,
+                u.UploadedAt
+            })
+            .ToListAsync();
+
+        return Ok(uploads);
+    }
+
+
 }
