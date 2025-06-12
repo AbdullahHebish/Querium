@@ -42,103 +42,6 @@ namespace Querim.Controllers
 
             return Ok(chapter);
         }
-        [HttpPost("upload/{chapterId}")]
-        public async Task<IActionResult> UploadFileToChapter(int chapterId, [FromForm] IFormFile file)
-        {
-            // Validate chapter exists
-            var chapter = await _dbContext.Chapters.FindAsync(chapterId);
-            if (chapter == null)
-            {
-                return NotFound("Chapter not found");
-            }
-
-            // Validate file presence
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("Please upload a valid file.");
-            }
-
-            // Validate file extension (allow .txt and .pdf)
-            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            if (fileExtension != ".pdf" && fileExtension != ".txt")
-            {
-                return BadRequest("Only .txt and .pdf files are supported.");
-            }
-
-            string extractedText = "";
-
-            try
-            {
-                if (fileExtension == ".pdf")
-                {
-                    // Extract text from PDF using PdfPig
-                    using var pdfStream = file.OpenReadStream();
-                    using var pdfDocument = PdfDocument.Open(pdfStream);
-
-                    var stringBuilder = new StringBuilder();
-                    foreach (var page in pdfDocument.GetPages())
-                    {
-                        stringBuilder.AppendLine(page.Text);
-                    }
-                    extractedText = stringBuilder.ToString();
-                }
-                else if (fileExtension == ".txt")
-                {
-                    // Read txt file content as plain text
-                    using var reader = new StreamReader(file.OpenReadStream());
-                    extractedText = await reader.ReadToEndAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error reading file content");
-                return BadRequest("Error reading file content.");
-            }
-
-            if (string.IsNullOrWhiteSpace(extractedText))
-            {
-                return BadRequest("The file contains no readable text.");
-            }
-
-            List<GeminiService.QuizQuestion> questions;
-
-            try
-            {
-                questions = await _geminiService.GenerateQuestionsAsync(extractedText);
-            }
-            catch (HttpRequestException httpEx)
-            {
-                _logger.LogError(httpEx, "Gemini API request failed");
-                return StatusCode(502, new
-                {
-                    error = "Error communicating with Gemini API",
-                    details = httpEx.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error generating questions");
-                return StatusCode(500, "An error occurred while generating questions.");
-            }
-
-            var questionEntities = questions.Select(q => new QuizQuestionEntity
-            {
-                QuestionText = q.QuestionText,
-                CorrectAnswer = q.CorrectAnswer,
-                AnswersJson = JsonSerializer.Serialize(q.Answers),
-                ChapterId = chapterId
-            }).ToList();
-
-            _dbContext.QuizQuestions.AddRange(questionEntities);
-            await _dbContext.SaveChangesAsync();
-
-            return Ok(new
-            {
-                success = true,
-                count = questions.Count,
-                questions
-            });
-        }
         [HttpGet("subjects/{subjectId}/chapters")]
         public async Task<IActionResult> GetChaptersBySubject(int subjectId)
         {
@@ -160,6 +63,109 @@ namespace Querim.Controllers
             }).ToList();
 
             return Ok(chapters);
+        }
+
+        [HttpPost("upload/{chapterId}")]
+        public async Task<IActionResult> UploadFilesToChapter(int chapterId, [FromForm] List<IFormFile> files)
+        {
+            // Validate chapter exists
+            var chapter = await _dbContext.Chapters.FindAsync(chapterId);
+            if (chapter == null)
+            {
+                return NotFound("Chapter not found");
+            }
+
+            // Validate files presence
+            if (files == null || files.Count == 0)
+            {
+                return BadRequest("Please upload at least one file.");
+            }
+
+            var allQuestions = new List<GeminiService.QuizQuestion>();
+
+            foreach (var file in files)
+            {
+                var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (fileExtension != ".pdf" && fileExtension != ".txt")
+                {
+                    return BadRequest("Only .txt and .pdf files are supported.");
+                }
+
+                string extractedText = "";
+
+                try
+                {
+                    if (fileExtension == ".pdf")
+                    {
+                        using var pdfStream = file.OpenReadStream();
+                        using var pdfDocument = PdfDocument.Open(pdfStream);
+
+                        var stringBuilder = new StringBuilder();
+                        foreach (var page in pdfDocument.GetPages())
+                        {
+                            stringBuilder.AppendLine(page.Text);
+                        }
+                        extractedText = stringBuilder.ToString();
+                    }
+                    else // txt file
+                    {
+                        using var reader = new StreamReader(file.OpenReadStream());
+                        extractedText = await reader.ReadToEndAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Error reading file content: {file.FileName}");
+                    return BadRequest($"Error reading file content: {file.FileName}");
+                }
+
+                if (string.IsNullOrWhiteSpace(extractedText))
+                {
+                    return BadRequest($"The file contains no readable text: {file.FileName}");
+                }
+
+                List<GeminiService.QuizQuestion> questions;
+
+                try
+                {
+                    questions = await _geminiService.GenerateQuestionsAsync(extractedText);
+                }
+                catch (HttpRequestException httpEx)
+                {
+                    _logger.LogError(httpEx, $"Gemini API request failed for file: {file.FileName}");
+                    return StatusCode(502, new
+                    {
+                        error = $"Error communicating with Gemini API for file: {file.FileName}",
+                        details = httpEx.Message
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Unexpected error generating questions for file: {file.FileName}");
+                    return StatusCode(500, $"An error occurred while generating questions for {file.FileName}.");
+                }
+
+                allQuestions.AddRange(questions);
+            }
+
+            var questionEntities = allQuestions.Select(q => new QuizQuestionEntity
+            {
+                QuestionText = q.QuestionText,
+                CorrectAnswer = q.CorrectAnswer,
+                AnswersJson = JsonSerializer.Serialize(q.Answers),
+                ChapterId = chapterId
+            }).ToList();
+
+            _dbContext.QuizQuestions.AddRange(questionEntities);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                fileCount = files.Count,
+                questionCount = allQuestions.Count,
+                questions = allQuestions
+            });
         }
         [HttpGet("chapters/{chapterId}/questions")]
         public async Task<IActionResult> GetQuestionsByChapter(int chapterId)
@@ -227,6 +233,103 @@ namespace Querim.Controllers
         //    try
         //    {
         //        questions = await _geminiService.GenerateQuestionsAsync(text);
+        //    }
+        //    catch (HttpRequestException httpEx)
+        //    {
+        //        _logger.LogError(httpEx, "Gemini API request failed");
+        //        return StatusCode(502, new
+        //        {
+        //            error = "Error communicating with Gemini API",
+        //            details = httpEx.Message
+        //        });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Unexpected error generating questions");
+        //        return StatusCode(500, "An error occurred while generating questions.");
+        //    }
+
+        //    var questionEntities = questions.Select(q => new QuizQuestionEntity
+        //    {
+        //        QuestionText = q.QuestionText,
+        //        CorrectAnswer = q.CorrectAnswer,
+        //        AnswersJson = JsonSerializer.Serialize(q.Answers),
+        //        ChapterId = chapterId
+        //    }).ToList();
+
+        //    _dbContext.QuizQuestions.AddRange(questionEntities);
+        //    await _dbContext.SaveChangesAsync();
+
+        //    return Ok(new
+        //    {
+        //        success = true,
+        //        count = questions.Count,
+        //        questions
+        //    });
+        //}
+        //[HttpPost("upload/{chapterId}")]
+        //public async Task<IActionResult> UploadFileToChapter(int chapterId, [FromForm] IFormFile file)
+        //{
+        //    // Validate chapter exists
+        //    var chapter = await _dbContext.Chapters.FindAsync(chapterId);
+        //    if (chapter == null)
+        //    {
+        //        return NotFound("Chapter not found");
+        //    }
+
+        //    // Validate file presence
+        //    if (file == null || file.Length == 0)
+        //    {
+        //        return BadRequest("Please upload a valid file.");
+        //    }
+
+        //    // Validate file extension (allow .txt and .pdf)
+        //    var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+        //    if (fileExtension != ".pdf" && fileExtension != ".txt")
+        //    {
+        //        return BadRequest("Only .txt and .pdf files are supported.");
+        //    }
+
+        //    string extractedText = "";
+
+        //    try
+        //    {
+        //        if (fileExtension == ".pdf")
+        //        {
+        //            // Extract text from PDF using PdfPig
+        //            using var pdfStream = file.OpenReadStream();
+        //            using var pdfDocument = PdfDocument.Open(pdfStream);
+
+        //            var stringBuilder = new StringBuilder();
+        //            foreach (var page in pdfDocument.GetPages())
+        //            {
+        //                stringBuilder.AppendLine(page.Text);
+        //            }
+        //            extractedText = stringBuilder.ToString();
+        //        }
+        //        else if (fileExtension == ".txt")
+        //        {
+        //            // Read txt file content as plain text
+        //            using var reader = new StreamReader(file.OpenReadStream());
+        //            extractedText = await reader.ReadToEndAsync();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Error reading file content");
+        //        return BadRequest("Error reading file content.");
+        //    }
+
+        //    if (string.IsNullOrWhiteSpace(extractedText))
+        //    {
+        //        return BadRequest("The file contains no readable text.");
+        //    }
+
+        //    List<GeminiService.QuizQuestion> questions;
+
+        //    try
+        //    {
+        //        questions = await _geminiService.GenerateQuestionsAsync(extractedText);
         //    }
         //    catch (HttpRequestException httpEx)
         //    {
