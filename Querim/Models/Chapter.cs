@@ -17,8 +17,8 @@ namespace Querim.Models
         [StringLength(500)]
         public string Description { get; set; }
 
-        [Required]
-        public string PdfPath { get; set; }
+      
+        public string? PdfPath { get; set; }
 
         [ForeignKey("Subject")]
         public int SubjectId { get; set; }

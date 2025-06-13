@@ -25,6 +25,23 @@ namespace Querim.Controllers
             _dbContext = dbContext;
         }
 
+        //[HttpPost("chapters")]
+        //public async Task<IActionResult> CreateChapter([FromBody] ChapterCreateDto dto)
+        //{
+        //    var chapter = new Chapter
+        //    {
+        //        Title = dto.Title,
+        //        Description = dto.Description,
+        //      //  PdfPath=dto.PdfPath,
+        //        SubjectId = dto.SubjectId,
+        //         // assumes FilePath is part of DTO and Chapter model
+        //    };
+
+        //    _dbContext.Chapters.Add(chapter);
+        //    await _dbContext.SaveChangesAsync();
+
+        //    return Ok(chapter);
+        //}
         [HttpPost("chapters")]
         public async Task<IActionResult> CreateChapter([FromBody] ChapterCreateDto dto)
         {
@@ -32,9 +49,9 @@ namespace Querim.Controllers
             {
                 Title = dto.Title,
                 Description = dto.Description,
-                PdfPath=dto.PdfPath,
+                PdfPath = dto.PdfPath,
                 SubjectId = dto.SubjectId,
-                 // assumes FilePath is part of DTO and Chapter model
+                // assumes FilePath is part of DTO and Chapter model
             };
 
             _dbContext.Chapters.Add(chapter);
