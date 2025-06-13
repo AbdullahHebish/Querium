@@ -1,27 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Querim.Models.QuizStudent
+namespace Querim.Models
 {
-    public class StudentQuiz
+    public class StudentUpload
     {
         [Key]
         public int Id { get; set; }
-        public int UploadId { get; set; }
+
         public int StudentId { get; set; }
         public Student Student { get; set; }
 
         [Required]
-        public string QuestionText { get; set; }
+        public string FileName { get; set; }
 
         [Required]
-        public string QuestionAnswersJson { get; set; }
+        public string FilePath { get; set; }
 
         [Required]
-        public string QuestionCorrectAnswer { get; set; }
+        public DateTime UploadedAt { get; set; } = DateTime.UtcNow;
 
+        [Required]
         [StringLength(20)]
         public string Status { get; set; } = "Pending";
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsDeleted { get; set; } = false;
     }
 }

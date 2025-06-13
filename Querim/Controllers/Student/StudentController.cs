@@ -13,19 +13,19 @@ namespace Querim.Controllers
     [Route("api/[controller]")]
     public class StudentController : ControllerBase
     {
-    
 
-    public static string HashPassword(string password)
-    {
-        // The WorkFactor is 12 by default, adjusts hash complexity
-        return BCrypt.Net.BCrypt.HashPassword(password);
-    }
+
+        public static string HashPassword(string password)
+        {
+            // The WorkFactor is 12 by default, adjusts hash complexity
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
         public static bool VerifyPassword(string enteredPassword, string storedHash)
         {
             return BCrypt.Net.BCrypt.Verify(enteredPassword, storedHash);
         }
         private readonly ApplicationDbContext _context;
-       
+
         public StudentController(ApplicationDbContext context)
         {
             _context = context;
@@ -34,7 +34,7 @@ namespace Querim.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] StudentRegisterDto registerDto)
         {
-            if (await _context.Students.AnyAsync(s => s.Email == registerDto.Email||s.NationalIDCard==registerDto.NationalIDCard||s.UniversityIDCard==registerDto.UniversityIDCard))
+            if (await _context.Students.AnyAsync(s => s.Email == registerDto.Email || s.NationalIDCard == registerDto.NationalIDCard || s.UniversityIDCard == registerDto.UniversityIDCard))
             {
                 return BadRequest(new { message = "already exists" });
             }
@@ -43,7 +43,7 @@ namespace Querim.Controllers
             {
                 FullName = registerDto.FullName,
                 Email = registerDto.Email,
-                PasswordHash =HashPassword( registerDto.Password), 
+                PasswordHash = HashPassword(registerDto.Password),
                 UniversityIDCard = registerDto.UniversityIDCard,
                 NationalIDCard = registerDto.NationalIDCard
             };

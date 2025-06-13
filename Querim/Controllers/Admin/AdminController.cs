@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using Querim.Data;
 using Querim.Dtos;
 using Querim.Models;
@@ -132,7 +131,7 @@ namespace Querim.Controllers
 
             return Ok(new
             {
-                Count = subjects.Count,
+                subjects.Count,
                 Data = subjects
             });
         }

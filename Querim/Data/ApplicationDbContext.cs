@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Querim.Models;
-using Querim.Models.QuizStudent;
+
 
 namespace Querim.Data
 {

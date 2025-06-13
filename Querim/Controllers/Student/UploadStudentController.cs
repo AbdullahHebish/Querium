@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Querim.Data;
 using Querim.Models;
-using Querim.Models.QuizStudent;
 using System.ComponentModel.DataAnnotations;
 
 [ApiController]

@@ -5,9 +5,8 @@ using Querim.Models;
 using System.Text.Json;
 using System.Text;
 using Querim.Data;
-using Querim.Models.QuizStudent;
-using Querim.Services;
 using UglyToad.PdfPig;
+using Querim.Services;
 
 [ApiController]
 [Route("api/[controller]")]

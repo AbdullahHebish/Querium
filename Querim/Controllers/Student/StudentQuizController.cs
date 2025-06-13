@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Querim.Data;
-using Querim.Models.QuizStudent;
+using Querim.Models;
 using System.Text.Json;
 
 [ApiController]

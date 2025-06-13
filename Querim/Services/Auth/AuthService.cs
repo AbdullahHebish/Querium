@@ -9,7 +9,7 @@
     {
         public bool VerifyPassword(string inputPassword, string storedPassword)
         {
-            return inputPassword == storedPassword; 
+            return inputPassword == storedPassword;
         }
     }
 }

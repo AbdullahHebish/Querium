@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Querim.Data;
 using Querim.Services;
 using Querim.Data;
-using Querim.Services;
 using Querim.Middleware;
 using Microsoft.AspNetCore.Http.Features;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

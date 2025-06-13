@@ -34,7 +34,7 @@ namespace Querim.Controllers
                 string loweredSearch = search.Trim().ToLower();
                 query = query.Where(s =>
                     s.Title.ToLower().Contains(loweredSearch) ||
-                    (s.Description != null && s.Description.ToLower().Contains(loweredSearch))
+                    s.Description != null && s.Description.ToLower().Contains(loweredSearch)
                 );
             }
 
