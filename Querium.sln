@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querim", "Querim\Querim.csproj", "{047F6A10-1405-48B5-8CA3-ED08299A245D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Querium", "Querim\Querium.csproj", "{047F6A10-1405-48B5-8CA3-ED08299A245D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
